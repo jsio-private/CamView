@@ -21,19 +21,23 @@ import eu.livotov.labs.android.camview.scanner.decoder.BarcodeDecoder;
  */
 public class ZXDecoder implements BarcodeDecoder
 {
-    protected Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
-
     private MultiFormatReader reader;
+    private boolean rotateDecode;
     private double scanAreaPercent = 0.7;
 
-    public ZXDecoder()
-    {
-        reader = new MultiFormatReader();
-
+    public static ZXDecoder getDecoder() {
+        Map<DecodeHintType, Object> hints = new EnumMap<DecodeHintType, Object>(DecodeHintType.class);
         hints.put(DecodeHintType.POSSIBLE_FORMATS, EnumSet.allOf(BarcodeFormat.class));
         hints.put(DecodeHintType.CHARACTER_SET, "utf-8");
         hints.put(DecodeHintType.TRY_HARDER, true);
 
+        return new ZXDecoder(true, hints);
+    }
+
+    public ZXDecoder(boolean rotateDecode, Map<DecodeHintType, Object> hints)
+    {
+        reader = new MultiFormatReader();
+        this.rotateDecode = rotateDecode;
         reader.setHints(hints);
     }
 
@@ -58,10 +62,10 @@ public class ZXDecoder implements BarcodeDecoder
 
         final int scanWidth = (int)(width * scanAreaPercent);
         final int scanHeight = (int)(height * scanAreaPercent);
-        final int scanAreaLeft = width/2-scanWidth/2;
-        final int scanAreaRight = width/2+scanWidth/2;
-        final int scanAreaTop = height/2-scanHeight/2;
-        final int scanAreaBottom = height/2+scanHeight/2;
+        final int scanAreaLeft = (width - scanWidth) / 2;
+        final int scanAreaRight = (width + scanWidth) / 2;
+        final int scanAreaTop = (height - scanHeight) / 2;
+        final int scanAreaBottom = (height + scanHeight) / 2;
 
         // First try image as is
         try
@@ -81,6 +85,10 @@ public class ZXDecoder implements BarcodeDecoder
         }
 
         // Then try it 90 degrees rotated (works for 1D codes)
+        if (!rotateDecode) {
+            return null;
+        }
+
         try
         {
             BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(new PlanarRotatedYUVLuminanceSource(image, width, height, scanAreaLeft, scanAreaTop, scanAreaRight, scanAreaBottom, true)));

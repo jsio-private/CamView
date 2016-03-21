@@ -73,7 +73,7 @@ public class MainActivity extends Activity
     protected void onResume()
     {
         super.onResume();
-        ZXDecoder decoder = new ZXDecoder();
+        ZXDecoder decoder = ZXDecoder.getDecoder();
         decoder.setScanAreaPercent(0.5);
         camera.setDecoder(decoder);
         camera.startScanner();

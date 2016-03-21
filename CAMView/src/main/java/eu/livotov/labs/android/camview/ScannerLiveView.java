@@ -32,7 +32,7 @@ public class ScannerLiveView extends FrameLayout implements LiveDataProcessingCa
     protected CameraLiveView camera;
     protected ImageView hud;
     protected ScannerViewEventListener scannerViewEventListener;
-    protected BarcodeDecoder decoder = new ZXDecoder();
+    protected BarcodeDecoder decoder = ZXDecoder.getDecoder();
     protected int scannerSoundAudioResource = R.raw.camview_beep;
     protected boolean playSound = true;
 
@@ -56,7 +56,7 @@ public class ScannerLiveView extends FrameLayout implements LiveDataProcessingCa
         final View root = LayoutInflater.from(getContext()).inflate(getScannerLayoutResource(), this);
         camera = (CameraLiveView) root.findViewById(R.id.camview_camera);
         hud = (ImageView) root.findViewById(R.id.cameraHud);
-        decoder = new ZXDecoder();
+        decoder = ZXDecoder.getDecoder();
         soundPlayer = new SoundPlayer(getContext());
 
         camera.setCameraLiveViewEventsListener(this);

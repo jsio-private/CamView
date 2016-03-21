@@ -201,7 +201,9 @@ public class CameraUtilsV1
 
         Camera.Parameters parameters = camera.getParameters();
 
-        Camera.Size sz = getOptimalPreviewSize(parameters.getSupportedPreviewSizes(), surfaceView.getWidth(), surfaceView.getHeight());
+        List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+//        Camera.Size sz = getOptimalPreviewSize(previewSizes, surfaceView.getWidth(), surfaceView.getHeight());
+        Camera.Size sz = previewSizes.get(previewSizes.size() / 2);
         parameters.setPreviewSize(sz.width, sz.height);
 
 

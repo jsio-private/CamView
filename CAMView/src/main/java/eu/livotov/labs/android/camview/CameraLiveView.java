@@ -90,6 +90,10 @@ public class CameraLiveView extends FrameLayout implements SurfaceHolder.Callbac
         }
     }
 
+    public SurfaceView getSurfaceView() {
+        return surfaceView;
+    }
+
     /**
      * Provides the list of all available cameras on this device
      *
